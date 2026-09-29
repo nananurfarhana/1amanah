@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Explorer - ASK Tingkatan 1</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        darkcode: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .preview-highlight { outline: 3px solid #3b82f6; position: relative; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { outline-color: #3b82f6; } 50% { outline-color: #f59e0b; } }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shadow-xl z-20 shrink-0">
+            <div>
+                <!-- App Header -->
+                <div class="p-5 border-b border-slate-800 flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-brand-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-brand-500/30">
+                        &lt;/&gt;
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-white text-lg tracking-wide leading-tight">HTML Explorer</h1>
+                        <p class="text-xs text-slate-400">ASK Tingkatan 1 (Bab 4.2)</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="p-3 space-y-1">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-home w-5 text-center text-blue-400"></i>
+                        <span>Laman Utama</span>
+                    </button>
+                    <button onclick="navigateTo('learn')" id="nav-learn" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-book-open w-5 text-center text-emerald-400"></i>
+                        <span>Modul Pembelajaran</span>
+                    </button>
+                    <button onclick="navigateTo('explore')" id="nav-explore" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-compass w-5 text-center text-amber-400"></i>
+                        <span>Stesen Meneroka</span>
+                    </button>
+                    <button onclick="navigateTo('individual')" id="nav-individual" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-user-ninja w-5 text-center text-indigo-400"></i>
+                        <span>Misi Individu</span>
+                    </button>
+                    <button onclick="navigateTo('group')" id="nav-group" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-users w-5 text-center text-purple-400"></i>
+                        <span>Cabar Kumpulan</span>
+                    </button>
+                    <button onclick="navigateTo('scoreboard')" id="nav-scoreboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
+                        <span>Papan Markah</span>
+                    </button>
+                    <button onclick="navigateTo('teacher')" id="nav-teacher" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-150 hover:bg-slate-800 hover:text-white">
+                        <i class="fas fa-chalkboard-teacher w-5 text-center text-rose-400"></i>
+                        <span>Paparan Guru</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Footer Stats / Status -->
+            <div class="p-4 bg-slate-950 border-t border-slate-800/80 text-xs text-slate-400 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span>Kemajuan Murid:</span>
+                    <span id="sidebar-overall-prog" class="font-bold text-emerald-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div id="sidebar-prog-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="pt-1 flex justify-between text-[10px] text-slate-500">
+                    <span>ASK T1 • KSSM</span>
+                    <span class="text-slate-400">Mod Pembelajaran</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50">
+            <!-- Top Navbar Header -->
+            <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shadow-sm z-10">
+                <!-- Breadcrumb Navigation -->
+                <div class="flex items-center space-x-2 text-sm text-slate-600">
+                    <span class="hover:text-brand-600 cursor-pointer" onclick="navigateTo('home')">HTML Explorer</span>
+                    <i class="fas fa-chevron-right text-xs text-slate-400"></i>
+                    <span id="breadcrumb-current" class="font-semibold text-slate-800">Laman Utama</span>
+                </div>
+
+                <!-- Page Navigation Action Controls -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="navigateHistory(-1)" class="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium flex items-center space-x-1 border border-slate-300 transition">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali</span>
+                    </button>
+                    <button onclick="navigateHistory(1)" class="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium flex items-center space-x-1 border border-slate-300 transition">
+                        <span>Maju</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button onclick="navigateTo('home')" class="p-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs border border-slate-300 transition" title="Laman Utama">
+                        <i class="fas fa-house px-1"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Dynamic Content Container -->
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 custom-scrollbar relative">
+                
+                <!-- 1. HOME PAGE VIEW -->
+                <section id="page-home" class="page-view max-w-6xl mx-auto space-y-8">
+                    <!-- Hero Banner -->
+                    <div class="bg-gradient-to-r from-brand-900 via-brand-700 to-indigo-900 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl font-mono select-none">
+                            &lt;html&gt;
+                        </div>
+                        <div class="relative z-10 max-w-2xl space-y-4">
+                            <span class="inline-block px-3 py-1 bg-brand-500/40 text-blue-200 rounded-full text-xs font-semibold tracking-wider uppercase border border-blue-400/30">
+                                Asas Sains Komputer Tingkatan 1
+                            </span>
+                            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+                                Jom Terokai Dunia HTML!
+                            </h1>
+                            <p class="text-slate-200 text-base leading-relaxed">
+                                Aplikasi pembelajaran interaktif Bab 4.2 Kod Arahan HTML. Fahami peranan Tajuk Perenggan, Banner, Frame, Menu serta Pautan Teks & Imej melalui amalan hands-on secara individu dan berkumpulan.
+                            </p>
+                            <div class="pt-4 flex flex-wrap gap-3">
+                                <button onclick="navigateTo('learn')" class="px-6 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold shadow-lg transition flex items-center space-x-2 transform hover:-translate-y-0.5">
+                                    <i class="fas fa-play"></i>
+                                    <span>Mula Belajar Sekarang</span>
+                                </button>
+                                <button onclick="navigateTo('individual')" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold backdrop-blur border border-white/20 transition flex items-center space-x-2">
+                                    <i class="fas fa-user-ninja text-indigo-300"></i>
+                                    <span>Misi Individu</span>
+                                </button>
+                                <button onclick="navigateTo('group')" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold backdrop-blur border border-white/20 transition flex items-center space-x-2">
+                                    <i class="fas fa-users text-purple-300"></i>
+                                    <span>Cabar Kumpulan</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Learning Topics Overview Cards -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center space-x-2">
+                            <i class="fas fa-bookmark text-brand-600"></i>
+                            <span>Topik Pembelajaran Utama (Buku Teks)</span>
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Card 1 -->
+                            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                                <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">
+                                    4.2.3
+                                </div>
+                                <h3 class="font-bold text-slate-800 text-lg mb-2">Paragraph Headings</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                                    Penggunaan tajuk perenggan daripada <code>&lt;h1&gt;</code> hingga <code>&lt;h6&gt;</code> untuk membandingkan saiz teks dan menyusun struktur kandungan laman web.
+                                </p>
+                                <button onclick="navigateTo('learn', 'sec-a')" class="text-brand-600 font-semibold text-sm hover:underline flex items-center space-x-1">
+                                    <span>Pelajari Bab Ini</span>
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                                <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">
+                                    4.2.4
+                                </div>
+                                <h3 class="font-bold text-slate-800 text-lg mb-2">Banner, Frame & Menu</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                                    Fungsi Banner sebagai identiti, susunan Frame (melintang & menegak), serta pembinaan Menu menggunakan tag <code>&lt;nav&gt;</code>, <code>&lt;ul&gt;</code>, dan <code>&lt;li&gt;</code>.
+                                </p>
+                                <button onclick="navigateTo('learn', 'sec-b')" class="text-brand-600 font-semibold text-sm hover:underline flex items-center space-x-1">
+                                    <span>Pelajari Bab Ini</span>
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+                                <div class="w-12 h-12 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">
+                                    4.2.5
+                                </div>
+                                <h3 class="font-bold text-slate-800 text-lg mb-2">Pautan Teks & Imej</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                                    Navigasi antara laman web menggunakan tag pautan <code>&lt;a href="..."&gt;</code> melalui elemen teks biasa mahupun paparan imej.
+                                </p>
+                                <button onclick="navigateTo('learn', 'sec-c')" class="text-brand-600 font-semibold text-sm hover:underline flex items-center space-x-1">
+                                    <span>Pelajari Bab Ini</span>
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classroom Lesson Workflow Progress -->
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                        <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                            <i class="fas fa-route text-amber-500"></i>
+                            <span>Alir Langkah Pembelajaran 60 Minit</span>
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+                            <div class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm shrink-0">1</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Penerangan & Terokai</h4>
+                                    <p class="text-xs text-slate-500">Mempelajari konsep teori & menguji hasil output di Stesen Meneroka.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0">2</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Misi Individu</h4>
+                                    <p class="text-xs text-slate-500">Ujian kefahaman kendiri menerusi 4 peringkat cabaran interaktif.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">3</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Cabaran Kumpulan</h4>
+                                    <p class="text-xs text-slate-500">Merekabentuk mini laman web sekolah bersama rakan & membentangkannya.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. LEARN PAGE VIEW -->
+                <section id="page-learn" class="page-view hidden max-w-6xl mx-auto space-y-10">
+                    <!-- Page Header -->
+                    <div class="border-b border-slate-200 pb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800">Modul Pembelajaran HTML</h1>
+                            <p class="text-sm text-slate-600">Nota padat dan simulasi berpandukan buku teks ASK Tingkatan 1.</p>
+                        </div>
+                        <!-- Section Navigation Tabs -->
+                        <div class="flex space-x-2 bg-slate-200 p-1 rounded-xl text-xs font-semibold">
+                            <button onclick="switchLearnTab('sec-a')" id="tab-sec-a" class="px-3 py-1.5 rounded-lg transition bg-white text-brand-600 shadow-sm">4.2.3 Headings</button>
+                            <button onclick="switchLearnTab('sec-b')" id="tab-sec-b" class="px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">4.2.4 Banner, Frame, Menu</button>
+                            <button onclick="switchLearnTab('sec-c')" id="tab-sec-c" class="px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">4.2.5 Pautan Teks & Imej</button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION A: 4.2.3 Paragraph Headings -->
+                    <div id="learn-sec-a" class="learn-tab-content space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <span class="p-2 bg-blue-100 text-blue-600 rounded-lg font-bold">4.2.3</span>
+                                <h2 class="text-xl font-bold text-slate-800">Paragraph Headings (Tajuk Perenggan)</h2>
+                            </div>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Tajuk perenggan dalam HTML digunakan untuk menampilkan teks dengan pelbagai saiz tajuk. Penggunaan tajuk membantu menyusun hierarki kandungan laman web supaya lebih kemas, teratur, dan mudah dibaca oleh pengguna.
+                            </p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                                    <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                        <i class="fas fa-check-circle text-emerald-500"></i>
+                                        <span>Ciri-Ciri Utama Paragraph Headings:</span>
+                                    </h3>
+                                    <ul class="text-xs text-slate-600 space-y-2 list-disc pl-5">
+                                        <li>Terdapat <strong>6 saiz tajuk</strong> daripada <code>&lt;h1&gt;</code> hingga <code>&lt;h6&gt;</code>.</li>
+                                        <li>Tag <code>&lt;h1&gt;</code> mewakili tajuk paling utama dan mempunyai saiz teks paling besar.</li>
+                                        <li>Tag <code>&lt;h2&gt;</code> hingga <code>&lt;h6&gt;</code> digunakan untuk tajuk sub-seksyen yang lebih kecil.</li>
+                                        <li>Setiap tajuk secara automatik membina ruang baris baharu di atas dan di bawahnya.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Interactive Heading Selector Demo -->
+                                <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-800 space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="font-bold text-amber-400 text-sm">Simulasi Interaktif: "Cuba Sendiri"</h3>
+                                        <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-400">Pilih Saiz Tag</span>
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button onclick="setHeadingDemo('h1')" class="heading-demo-btn px-3 py-1 bg-brand-600 text-white text-xs rounded hover:bg-brand-500 font-mono">h1</button>
+                                        <button onclick="setHeadingDemo('h2')" class="heading-demo-btn px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700 font-mono">h2</button>
+                                        <button onclick="setHeadingDemo('h3')" class="heading-demo-btn px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700 font-mono">h3</button>
+                                        <button onclick="setHeadingDemo('h4')" class="heading-demo-btn px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700 font-mono">h4</button>
+                                        <button onclick="setHeadingDemo('h5')" class="heading-demo-btn px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700 font-mono">h5</button>
+                                        <button onclick="setHeadingDemo('h6')" class="heading-demo-btn px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700 font-mono">h6</button>
+                                    </div>
+                                    <div class="p-3 bg-slate-950 rounded font-mono text-xs text-green-400 border border-slate-800">
+                                        Kod HTML: <span id="heading-code-display">&lt;h1&gt;Tajuk Utama Sekolah&lt;/h1&gt;</span>
+                                    </div>
+                                    <div class="p-4 bg-white text-slate-900 rounded border border-slate-300 min-h-[90px] flex items-center justify-center overflow-x-auto">
+                                        <div id="heading-visual-display" class="w-full text-center">
+                                            <h1 class="text-3xl font-bold">Tajuk Utama Sekolah</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION B: 4.2.4 Banner, Frame & Menu -->
+                    <div id="learn-sec-b" class="learn-tab-content hidden space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-6">
+                            <div class="flex items-center space-x-3">
+                                <span class="p-2 bg-emerald-100 text-emerald-600 rounded-lg font-bold">4.2.4</span>
+                                <h2 class="text-xl font-bold text-slate-800">Banner, Frame dan Menu</h2>
+                            </div>
+
+                            <!-- Interactive Component Cards -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- Banner Card -->
+                                <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                                    <div class="flex items-center space-x-2 text-emerald-600">
+                                        <i class="fas fa-image text-lg"></i>
+                                        <h3 class="font-bold text-slate-800">BANNER</h3>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        Banner diletakkan di bahagian atas laman web. Ia berfungsi sebagai tajuk utama atau grafik pengenalan yang menampilkan nama, logo, atau grafik tema sesebuah organisasi.
+                                    </p>
+                                    <div class="p-3 bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-center rounded-lg shadow-sm">
+                                        <i class="fas fa-school text-2xl mb-1"></i>
+                                        <div class="font-bold text-xs uppercase tracking-wider">SEKOLAH MENENGAH KEBANGSAAN CELERIK</div>
+                                        <div class="text-[9px] opacity-80">Contoh Paparan Banner Laman Web</div>
+                                    </div>
+                                </div>
+
+                                <!-- Frame Card -->
+                                <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                                    <div class="flex items-center space-x-2 text-blue-600">
+                                        <i class="fas fa-border-all text-lg"></i>
+                                        <h3 class="font-bold text-slate-800">FRAME</h3>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        Frame membahagikan tetingkap paparan pelayar web kepada beberapa bahagian berasingan untuk memaparkan dokumen HTML yang berbeza secara serentak.
+                                    </p>
+                                    <div class="flex space-x-2">
+                                        <button onclick="toggleFrameDemo('rows')" id="btn-frame-rows" class="flex-1 py-1.5 bg-blue-600 text-white rounded text-xs font-semibold">Melintang (rows)</button>
+                                        <button onclick="toggleFrameDemo('cols')" id="btn-frame-cols" class="flex-1 py-1.5 bg-slate-200 text-slate-700 rounded text-xs font-semibold">Menegak (cols)</button>
+                                    </div>
+                                    <div id="frame-visual-container" class="h-24 border-2 border-dashed border-blue-400 rounded flex flex-col p-1 gap-1 bg-white">
+                                        <div class="bg-blue-100 text-blue-800 text-[10px] font-bold flex items-center justify-center flex-1 rounded">Bahagian Frame 1 (rows="30%")</div>
+                                        <div class="bg-blue-200 text-blue-900 text-[10px] font-bold flex items-center justify-center flex-2 rounded">Bahagian Frame 2 (rows="70%")</div>
+                                    </div>
+                                </div>
+
+                                <!-- Menu Card -->
+                                <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                                    <div class="flex items-center space-x-2 text-purple-600">
+                                        <i class="fas fa-bars text-lg"></i>
+                                        <h3 class="font-bold text-slate-800">MENU</h3>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        Menu mengandungi senarai pautan navigasi untuk memudahkan pengguna berpindah ke bahagian atau laman web lain.
+                                    </p>
+                                    <div class="space-y-1.5">
+                                        <button onclick="showMenuDetail('static')" class="w-full text-left px-2 py-1 rounded bg-white hover:bg-purple-50 text-xs font-medium border border-slate-200 flex justify-between items-center">
+                                            <span>1. Pautan Statik</span>
+                                            <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+                                        </button>
+                                        <button onclick="showMenuDetail('dropdown')" class="w-full text-left px-2 py-1 rounded bg-white hover:bg-purple-50 text-xs font-medium border border-slate-200 flex justify-between items-center">
+                                            <span>2. Menu Drop-down</span>
+                                            <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+                                        </button>
+                                        <button onclick="showMenuDetail('multilevel')" class="w-full text-left px-2 py-1 rounded bg-white hover:bg-purple-50 text-xs font-medium border border-slate-200 flex justify-between items-center">
+                                            <span>3. Menu Pelbagai Aras</span>
+                                            <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+                                        </button>
+                                        <button onclick="showMenuDetail('floating')" class="w-full text-left px-2 py-1 rounded bg-white hover:bg-purple-50 text-xs font-medium border border-slate-200 flex justify-between items-center">
+                                            <span>4. Menu Terapung</span>
+                                            <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Menu Detail Popup / Box -->
+                            <div id="menu-detail-box" class="p-4 bg-purple-50 border border-purple-200 rounded-xl text-xs text-purple-900 flex items-start space-x-3">
+                                <i class="fas fa-info-circle text-purple-600 text-lg mt-0.5"></i>
+                                <div>
+                                    <h4 id="menu-detail-title" class="font-bold text-sm">Tag HTML Pembinaan Menu:</h4>
+                                    <p id="menu-detail-desc" class="mt-1 leading-relaxed">
+                                        Tag <code>&lt;nav&gt;</code> mentakrifkan kawasan navigasi utama. Tag <code>&lt;ul&gt;</code> membina senarai tidak teratur (unordered list), dan tag <code>&lt;li&gt;</code> membina setiap item pautan dalam menu tersebut.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION C: 4.2.5 Pautan Teks & Imej -->
+                    <div id="learn-sec-c" class="learn-tab-content hidden space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <span class="p-2 bg-purple-100 text-purple-600 rounded-lg font-bold">4.2.5</span>
+                                <h2 class="text-xl font-bold text-slate-800">Pautan Teks dan Imej (Hyperlink)</h2>
+                            </div>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Pautan (hyperlink) membolehkan pengguna beralih dari satu dokumen HTML ke dokumen HTML yang lain, atau ke lokasi lain dalam laman web yang sama. Pautan boleh dibuat dalam bentuk <strong>Teks</strong> atau <strong>Imej</strong> menggunakan tag pautan <code>&lt;a href="..."&gt;</code>.
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                <!-- Explanation Box -->
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                                        <h3 class="font-bold text-slate-800 text-sm">1. Pautan Teks (Text Link)</h3>
+                                        <p class="text-xs text-slate-600">
+                                            Pengguna mengklik pada perkataan atau frasa teks untuk membuka laman sasaran.
+                                        </p>
+                                        <div class="p-2 bg-slate-900 text-green-400 font-mono text-[11px] rounded">
+                                            &lt;a href="galeri.html"&gt;Klik Ke Galeri&lt;/a&gt;
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                                        <h3 class="font-bold text-slate-800 text-sm">2. Pautan Imej (Image Link)</h3>
+                                        <p class="text-xs text-slate-600">
+                                            Elemen gambar <code>&lt;img&gt;</code> dimasukkan di dalam tag pautan <code>&lt;a&gt;</code> supaya gambar tersebut boleh diklik.
+                                        </p>
+                                        <div class="p-2 bg-slate-900 text-green-400 font-mono text-[11px] rounded">
+                                            &lt;a href="utama.html"&gt;&lt;img src="home.png"&gt;&lt;/a&gt;
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Interactive Link Demo Browser -->
+                                <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-bold text-amber-400 text-sm mb-1">Demonstrasi Interaktif Pautan</h3>
+                                        <p class="text-xs text-slate-400 mb-3">Sila klik pautan teks atau pautan imej di dalam tetingkap simulasi di bawah:</p>
+                                    </div>
+
+                                    <!-- Mini Browser Frame -->
+                                    <div class="bg-white text-slate-800 rounded-lg overflow-hidden border border-slate-300 shadow-md">
+                                        <div class="bg-slate-200 px-3 py-1.5 border-b border-slate-300 flex items-center space-x-2 text-xs">
+                                            <span class="w-2.5 h-2.5 bg-red-400 rounded-full"></span>
+                                            <span class="w-2.5 h-2.5 bg-yellow-400 rounded-full"></span>
+                                            <span class="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+                                            <span id="link-browser-url" class="ml-2 font-mono text-[10px] text-slate-600 bg-white px-2 py-0.5 rounded border flex-1 truncate">
+                                                http://sekolah.edu.my/index.html
+                                            </span>
+                                        </div>
+                                        <div id="link-browser-body" class="p-6 text-center space-y-4 min-h-[140px] flex flex-col items-center justify-center">
+                                            <h4 class="font-bold text-slate-800 text-base">Laman Utama Sekolah</h4>
+                                            <div class="flex items-center justify-center space-x-4">
+                                                <!-- Text Link -->
+                                                <a href="javascript:void(0)" onclick="simulateLinkNav('galeri.html', 'Halaman Galeri Foto Sekolah')" class="text-brand-600 underline text-xs font-semibold hover:text-brand-800">
+                                                    [Pautan Teks: Ke Galeri]
+                                                </a>
+                                                <!-- Image Link -->
+                                                <a href="javascript:void(0)" onclick="simulateLinkNav('pencapaian.html', 'Halaman Senarai Pencapaian Sekolah')" class="inline-block p-1 bg-amber-100 border border-amber-300 rounded hover:opacity-80 transition" title="Pautan Imej">
+                                                    <i class="fas fa-trophy text-amber-600 text-2xl"></i>
+                                                    <span class="block text-[9px] text-amber-800 font-bold">Pautan Imej</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button onclick="simulateLinkNav('index.html', 'Laman Utama Sekolah')" class="text-xs text-slate-400 hover:text-white underline text-right">
+                                        Reset Simulasi Pelayar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. EXPLORE PAGE VIEW -->
+                <section id="page-explore" class="page-view hidden max-w-6xl mx-auto space-y-6">
+                    <div class="border-b border-slate-200 pb-4">
+                        <h1 class="text-2xl font-bold text-slate-800">Stesen Meneroka Kod & Hasil Output</h1>
+                        <p class="text-sm text-slate-600">Siasat hubungan antara struktur tag HTML dan paparan visualnya. Fikirkan jawapan anda sebelum menekan butang Tunjuk Output!</p>
+                    </div>
+
+                    <!-- Station Selector Buttons -->
+                    <div class="grid grid-cols-2 md:grid-cols-6 gap-2">
+                        <button onclick="loadExploreStation(1)" id="stn-btn-1" class="stn-tab p-3 bg-white border border-slate-300 rounded-lg text-center hover:border-brand-500 transition shadow-sm">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Stesen 1</span>
+                            <span class="text-xs font-bold text-slate-800">Headings</span>
+                        </button>
+                        <button onclick="loadExploreStation(2)" id="stn-btn-2" class="stn-tab p-3 bg-white border border-slate-300 rounded-lg text-center hover:border-brand-500 transition shadow-sm">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Stesen 2</span>
+                            <span class="text-xs font-bold text-slate-800">Banner</span>
+                        </button>
+                        <button onclick="loadExploreStation(3)" id="stn-btn-3" class="stn-tab p-3 bg-white border border-slate-300 rounded-lg text-center hover:border-brand-500 transition shadow-sm">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Stesen 3</span>
+                            <span class="text-xs font-bold text-slate-800">Frame</span>
+                        </button>
+                        <button onclick="loadExploreStation(4)" id="stn-btn-4" class="stn-tab p-3 bg-white border border-slate-300 rounded-lg text-center hover:border-brand-500 transition shadow-sm">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Stesen 4</span>
+                            <span class="text-xs font-bold text-slate-800">Menu</span>
+                        </button>
+                        <button onclick="loadExploreStation(5)" id="stn-btn-5" class="stn-tab p-3 bg-white border border-slate-300 rounded-lg text-center hover:border-brand-500 transition shadow-sm">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Stesen 5</span>
+                            <span class="text-xs font-bold text-slate-800">Pautan Teks</span>
+                        </button>
+                        <button onclick="loadExploreStation(6)" id="stn-btn-6" class="stn-tab p-3 bg-white border border-slate-300 rounded-lg text-center hover:border-brand-500 transition shadow-sm">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Stesen 6</span>
+                            <span class="text-xs font-bold text-slate-800">Pautan Imej</span>
+                        </button>
+                    </div>
+
+                    <!-- Station Main Panel -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
+                        <div class="flex items-center justify-between border-b pb-3">
+                            <div class="flex items-center space-x-3">
+                                <span id="stn-title-num" class="px-3 py-1 bg-brand-600 text-white rounded-full text-xs font-bold">STESEN 1</span>
+                                <h2 id="stn-title-name" class="text-lg font-bold text-slate-800">Paragraph Headings</h2>
+                            </div>
+                            <div class="flex items-center space-x-2 text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200">
+                                <i class="fas fa-lightbulb"></i>
+                                <span><strong>Fikir Dulu:</strong> Apakah bentuk paparan teks yang bakal dihasilkan oleh kod ini?</span>
+                            </div>
+                        </div>
+
+                        <!-- Split Code vs Output View -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Left: Code representation -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+                                    <span>Kod HTML Stesen</span>
+                                    <i class="fas fa-code text-slate-400"></i>
+                                </label>
+                                <pre id="stn-code-block" class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs overflow-x-auto min-h-[220px] border border-slate-800">
+&lt;h1&gt;Kejohanan Sukan Tahunan&lt;/h1&gt;
+&lt;h3&gt;Acara Padang dan Balapan&lt;/h3&gt;
+&lt;h6&gt;Tarikh: 12 Oktober 2026&lt;/h6&gt;</pre>
+                            </div>
+
+                            <!-- Right: Visual Output -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+                                    <span>Paparan Visual Output</span>
+                                    <i class="fas fa-desktop text-slate-400"></i>
+                                </label>
+                                <div id="stn-output-box" class="bg-slate-100 rounded-xl border-2 border-dashed border-slate-300 min-h-[220px] p-6 flex flex-col items-center justify-center text-center">
+                                    <i class="fas fa-eye-slash text-slate-400 text-3xl mb-2"></i>
+                                    <p class="text-xs text-slate-500 font-medium">Output disembunyikan. Klik "Tunjuk Output" untuk melihat jawapan visual.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Control Action Bar -->
+                        <div class="flex items-center justify-end space-x-3 border-t pt-4">
+                            <button onclick="resetExploreStation()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition">
+                                <i class="fas fa-rotate-left mr-1"></i> Set Semula
+                            </button>
+                            <button onclick="revealExploreOutput()" class="px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-lg shadow-md transition flex items-center space-x-2">
+                                <i class="fas fa-eye"></i>
+                                <span>Tunjuk Output</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. INDIVIDUAL MISSION PAGE VIEW -->
+                <section id="page-individual" class="page-view hidden max-w-6xl mx-auto space-y-6">
+                    <!-- Title & Header -->
+                    <div class="bg-gradient-to-r from-indigo-900 to-purple-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-indigo-500/30 text-indigo-200 text-xs rounded-full border border-indigo-400/30 font-semibold">
+                                Pentaksiran Kendiri
+                            </span>
+                            <h1 class="text-2xl font-extrabold mt-1">Misi Individu: "Can You Decode the Web?"</h1>
+                            <p class="text-xs text-slate-300">Selesaikan 4 peringkat cabaran HTML berpandukan sukatan ASK Tingkatan 1.</p>
+                        </div>
+                        <!-- Individual Live Score Badge -->
+                        <div class="bg-white/10 backdrop-blur px-5 py-3 rounded-xl border border-white/20 text-center min-w-[140px]">
+                            <div class="text-[10px] uppercase tracking-wider text-indigo-200 font-bold">Markah Semasa</div>
+                            <div id="ind-score-display" class="text-3xl font-extrabold text-amber-300">0 / 100</div>
+                        </div>
+                    </div>
+
+                    <!-- Mission Stages Navigation Bar -->
+                    <div class="flex border-b border-slate-200 bg-white rounded-xl p-1 shadow-sm text-xs font-bold overflow-x-auto">
+                        <button onclick="switchIndStage(1)" id="ind-tab-1" class="ind-stage-btn flex-1 py-2.5 px-3 rounded-lg text-center transition bg-indigo-600 text-white">
+                            Peringkat 1: Padanan Elemen
+                        </button>
+                        <button onclick="switchIndStage(2)" id="ind-tab-2" class="ind-stage-btn flex-1 py-2.5 px-3 rounded-lg text-center transition text-slate-600 hover:bg-slate-100">
+                            Peringkat 2: Ramal Output
+                        </button>
+                        <button onclick="switchIndStage(3)" id="ind-tab-3" class="ind-stage-btn flex-1 py-2.5 px-3 rounded-lg text-center transition text-slate-600 hover:bg-slate-100">
+                            Peringkat 3: Cari Ralat Kod
+                        </button>
+                        <button onclick="switchIndStage(4)" id="ind-tab-4" class="ind-stage-btn flex-1 py-2.5 px-3 rounded-lg text-center transition text-slate-600 hover:bg-slate-100">
+                            Peringkat 4: Bina Laman Web
+                        </button>
+                    </div>
+
+                    <!-- STAGE 1: DRAG & DROP / MATCHING -->
+                    <div id="ind-stage-1" class="ind-stage-content space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <div>
+                                    <h2 class="font-bold text-slate-800 text-base">Peringkat 1: Padankan Konsep & Tag HTML</h2>
+                                    <p class="text-xs text-slate-500">Pilih konsep yang betul bagi setiap penerangan di bawah.</p>
+                                </div>
+                                <span class="text-xs font-semibold px-2 py-1 bg-indigo-50 text-indigo-700 rounded">25 Markah</span>
+                            </div>
+
+                            <div class="space-y-4" id="stage1-questions-container">
+                                <!-- Stage 1 Items generated dynamically via JS -->
+                            </div>
+
+                            <div class="pt-4 flex justify-between items-center border-t">
+                                <div id="stage1-feedback" class="text-xs font-semibold hidden"></div>
+                                <button onclick="checkStage1()" class="ml-auto px-6 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-lg hover:bg-indigo-700 transition">
+                                    Hantar Peringkat 1
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STAGE 2: PREDICT OUTPUT -->
+                    <div id="ind-stage-2" class="ind-stage-content hidden space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <div>
+                                    <h2 class="font-bold text-slate-800 text-base">Peringkat 2: Ramal Hasil Output Kod</h2>
+                                    <p class="text-xs text-slate-500">Analisis snippet kod HTML berikut dan pilih paparan visual yang tepat.</p>
+                                </div>
+                                <span class="text-xs font-semibold px-2 py-1 bg-indigo-50 text-indigo-700 rounded">25 Markah</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Code snippet box -->
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold text-slate-500">Kod HTML Soalan:</label>
+                                    <pre class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-slate-800 overflow-x-auto">&lt;h2&gt;Menu Kantin Sekolah&lt;/h2&gt;
+&lt;nav&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Nasi Lemak&lt;/li&gt;
+    &lt;li&gt;Mee Goreng&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</pre>
+                                </div>
+
+                                <!-- MCQ Options -->
+                                <div class="space-y-3">
+                                    <label class="text-xs font-bold text-slate-500">Pilih Paparan Visual Yang Betul:</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                            <input type="radio" name="stg2-option" value="A" class="mt-1 text-indigo-600">
+                                            <div class="text-xs">
+                                                <strong>Pilihan A:</strong> Teks "Menu Kantin Sekolah" saiz h2, diikuti senarai berbintik (bullet points) Nasi Lemak dan Mee Goreng.
+                                            </div>
+                                        </label>
+                                        <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                            <input type="radio" name="stg2-option" value="B" class="mt-1 text-indigo-600">
+                                            <div class="text-xs">
+                                                <strong>Pilihan B:</strong> Teks biasa tanpa format dan pautan boleh diklik secara mendatar.
+                                            </div>
+                                        </label>
+                                        <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                            <input type="radio" name="stg2-option" value="C" class="mt-1 text-indigo-600">
+                                            <div class="text-xs">
+                                                <strong>Pilihan C:</strong> Gambar grafik menu kantin beserta butang borang carian.
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex justify-between items-center border-t">
+                                <div id="stage2-feedback" class="text-xs font-semibold hidden"></div>
+                                <button onclick="checkStage2()" class="ml-auto px-6 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-lg hover:bg-indigo-700 transition">
+                                    Hantar Peringkat 2
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STAGE 3: FIND THE ERROR -->
+                    <div id="ind-stage-3" class="ind-stage-content hidden space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <div>
+                                    <h2 class="font-bold text-slate-800 text-base">Peringkat 3: Cari Ralat Dalam Kod HTML</h2>
+                                    <p class="text-xs text-slate-500">Kenalpasti tag atau sintaks yang salah berpandukan topik ASK Tingkatan 1.</p>
+                                </div>
+                                <span class="text-xs font-semibold px-2 py-1 bg-indigo-50 text-indigo-700 rounded">25 Markah</span>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="p-4 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl border border-slate-800">
+                                    &lt;!-- Kod Mengandungi Ralat Pautan Imej --&gt;<br>
+                                    &lt;a href="galeri.html"&gt;<br>
+                                    &nbsp;&nbsp;&lt;image src="lencana.png"&gt;<br>
+                                    &lt;/a&gt;
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold text-slate-700">Apakah ralat yang terdapat dalam kod di atas?</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+                                            <input type="radio" name="stg3-option" value="A" class="text-indigo-600">
+                                            <span class="text-xs">Tag pautan <code>&lt;a&gt;</code> tidak boleh membungkus imej.</span>
+                                        </label>
+                                        <label class="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+                                            <input type="radio" name="stg3-option" value="B" class="text-indigo-600">
+                                            <span class="text-xs">Penggunaan tag <code>&lt;image&gt;</code> adalah salah; tag imej HTML yang betul ialah <code>&lt;img&gt;</code>.</span>
+                                        </label>
+                                        <label class="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+                                            <input type="radio" name="stg3-option" value="C" class="text-indigo-600">
+                                            <span class="text-xs">Atribut <code>href</code> sepatutnya digantikan dengan atribut <code>src</code> pada tag <code>&lt;a&gt;</code>.</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex justify-between items-center border-t">
+                                <div id="stage3-feedback" class="text-xs font-semibold hidden"></div>
+                                <button onclick="checkStage3()" class="ml-auto px-6 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-lg hover:bg-indigo-700 transition">
+                                    Hantar Peringkat 3
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STAGE 4: BUILD THE STRUCTURE -->
+                    <div id="ind-stage-4" class="ind-stage-content hidden space-y-6">
+                        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <div>
+                                    <h2 class="font-bold text-slate-800 text-base">Peringkat 4: Bina Laman Web Lengkap Kendiri</h2>
+                                    <p class="text-xs text-slate-500">Lengkapkan elemen tempat kosong untuk membina struktur laman web yang lengkap.</p>
+                                </div>
+                                <span class="text-xs font-semibold px-2 py-1 bg-indigo-50 text-indigo-700 rounded">25 Markah</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Builder inputs -->
+                                <div class="space-y-3 text-xs">
+                                    <div>
+                                        <label class="font-bold text-slate-700 block mb-1">1. Tajuk Perenggan Main Heading:</label>
+                                        <select id="stg4-heading" class="w-full p-2 border border-slate-300 rounded font-mono text-xs bg-slate-50">
+                                            <option value="">-- Pilih Tag Tajuk --</option>
+                                            <option value="h1">&lt;h1&gt;Portal Pembelajaran ASK&lt;/h1&gt;</option>
+                                            <option value="p">&lt;p&gt;Portal Pembelajaran ASK&lt;/p&gt;</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="font-bold text-slate-700 block mb-1">2. Pautan Navigasi Teks:</label>
+                                        <select id="stg4-link" class="w-full p-2 border border-slate-300 rounded font-mono text-xs bg-slate-50">
+                                            <option value="">-- Pilih Tag Pautan --</option>
+                                            <option value="a">&lt;a href="nota.html"&gt;Muat Turun Nota&lt;/a&gt;</option>
+                                            <option value="span">&lt;span href="nota.html"&gt;Muat Turun Nota&lt;/span&gt;</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="font-bold text-slate-700 block mb-1">3. Elemen Imej Lencana:</label>
+                                        <select id="stg4-img" class="w-full p-2 border border-slate-300 rounded font-mono text-xs bg-slate-50">
+                                            <option value="">-- Pilih Tag Imej --</option>
+                                            <option value="img">&lt;img src="logo.png" alt="Logo"&gt;</option>
+                                            <option value="pic">&lt;picture file="logo.png"&gt;</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic Preview Box -->
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold text-slate-500 flex justify-between">
+                                        <span>Pratonton Laman Web Anda:</span>
+                                        <button onclick="updateStage4Preview()" class="text-indigo-600 underline text-[11px]">Jana Pratonton</button>
+                                    </label>
+                                    <div id="stg4-preview-box" class="bg-slate-100 rounded-xl border-2 border-slate-300 p-4 min-h-[160px] flex flex-col items-center justify-center text-center text-xs">
+                                        <span class="text-slate-400">Pilih jawapan di sebelah kiri dan klik "Jana Pratonton".</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex justify-between items-center border-t">
+                                <div id="stage4-feedback" class="text-xs font-semibold hidden"></div>
+                                <button onclick="checkStage4()" class="ml-auto px-6 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-lg hover:bg-indigo-700 transition">
+                                    Selesaikan Misi Individu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Individual Completion Summary Modal / Box -->
+                    <div id="ind-summary-box" class="hidden bg-emerald-900 text-white rounded-2xl p-6 shadow-xl space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-award text-amber-400 text-4xl"></i>
+                            <div>
+                                <h2 class="text-xl font-extrabold">TAHNIAH! MISI INDIVIDU SELESAI</h2>
+                                <p class="text-xs text-emerald-200">Anda telah menyempurnakan pentaksiran kendiri HTML Explorer.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-emerald-950 p-4 rounded-xl border border-emerald-800 text-xs">
+                            <div>
+                                <h4 class="font-bold text-emerald-400 mb-1">Topik Yang Telah Dikuasai:</h4>
+                                <ul class="list-disc pl-4 space-y-1 text-emerald-100">
+                                    <li>Penggunaan tag Paragraph Headings & hierarki saiz.</li>
+                                    <li>Mengenalpasti ralat sintaks tag imej dan pautan.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-amber-300 mb-1">Cadangan Pengukuhan Semula:</h4>
+                                <p class="text-emerald-200">
+                                    Semak semula gabungan tag <code>&lt;nav&gt;</code>, <code>&lt;ul&gt;</code>, dan <code>&lt;li&gt;</code> dalam pembinaan Menu Laman Web.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. GROUP CHALLENGE PAGE VIEW -->
+                <section id="page-group" class="page-view hidden max-w-6xl mx-auto space-y-6">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-purple-500/30 text-purple-200 text-xs rounded-full border border-purple-400/30 font-semibold">
+                                Pembelajaran Kolaboratif (19 Murid / 4 Kumpulan)
+                            </span>
+                            <h1 class="text-2xl font-extrabold mt-1">Cabaran Kumpulan: "Design a Mini Website"</h1>
+                            <p class="text-xs text-purple-200">Bina mini laman web tema <strong>"SEKOLAH SAYA"</strong> dengan mengandungi 6 komponen utama.</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur px-5 py-3 rounded-xl border border-white/20 text-center min-w-[150px]">
+                            <div class="text-[10px] uppercase tracking-wider text-purple-200 font-bold">Markah Kumpulan</div>
+                            <div id="grp-score-display" class="text-3xl font-extrabold text-amber-300">0 / 60</div>
+                        </div>
+                    </div>
+
+                    <!-- Group Selector Bar -->
+                    <div class="flex items-center space-x-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                        <span class="text-xs font-bold text-slate-700">Pilih Kumpulan Anda:</span>
+                        <div class="flex space-x-2">
+                            <button onclick="selectActiveGroup(1)" id="grp-sel-1" class="grp-btn px-4 py-1.5 rounded-lg text-xs font-bold transition bg-purple-600 text-white">Kumpulan 1</button>
+                            <button onclick="selectActiveGroup(2)" id="grp-sel-2" class="grp-btn px-4 py-1.5 rounded-lg text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">Kumpulan 2</button>
+                            <button onclick="selectActiveGroup(3)" id="grp-sel-3" class="grp-btn px-4 py-1.5 rounded-lg text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">Kumpulan 3</button>
+                            <button onclick="selectActiveGroup(4)" id="grp-sel-4" class="grp-btn px-4 py-1.5 rounded-lg text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">Kumpulan 4</button>
+                        </div>
+                    </div>
+
+                    <!-- Group Roles & Workflow Steps -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Group Roles Assignment Box -->
+                        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                            <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                <i class="fas fa-users-cog text-purple-600"></i>
+                                <span>Agihan Peranan Ahli Kumpulan</span>
+                            </h3>
+                            <div class="space-y-2 text-xs" id="grp-member-list"></div>
+                        </div>
+
+                        <!-- 6 Required Components Checklist -->
+                        <div class="md:col-span-2 bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                            <h3 class="font-bold text-slate-800 text-sm flex items-center justify-between">
+                                <span>Semakan 6 Komponen Wajib (10 Markah Setiap Satu)</span>
+                                <span class="text-xs text-purple-600 font-semibold" id="grp-check-count">0 / 6 Disempurnakan</span>
+                            </h3>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs" id="grp-checklist-container">
+                                <!-- Generated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Website Workspace (Code & Preview) -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-3 gap-2">
+                            <h2 class="font-bold text-slate-800 text-base">Editor Laman Web "Sekolah Saya"</h2>
+                            <div class="flex space-x-2">
+                                <button onclick="runGroupPreview()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition flex items-center space-x-1">
+                                    <i class="fas fa-play"></i>
+                                    <span>Uji & Pratonton Laman Web</span>
+                                </button>
+                                <button onclick="submitGroupProject()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-lg transition flex items-center space-x-1">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Hantar Laman Web</span>
+                                </button>
+                                <button onclick="togglePresentationMode()" id="btn-pres-mode" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-lg transition flex items-center space-x-1">
+                                    <i class="fas fa-chalkboard"></i>
+                                    <span>Mod Pembentangan</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Presentation Mode Controls Bar -->
+                        <div id="pres-mode-bar" class="hidden bg-amber-50 p-3 rounded-xl border border-amber-300 space-y-2">
+                            <div class="text-xs font-bold text-amber-900 flex items-center justify-between">
+                                <span><i class="fas fa-bullhorn mr-1"></i> MOD PEMBENTANGAN: Klik label di bawah untuk menyorot (highlight) elemen dalam pratonton:</span>
+                                <span class="text-[10px] bg-amber-200 px-2 py-0.5 rounded text-amber-900">Pembentang Kumpulan</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <button onclick="highlightGroupElement('heading')" class="px-3 py-1 bg-white border border-amber-300 rounded hover:bg-amber-100 font-medium">1. Paragraph Heading</button>
+                                <button onclick="highlightGroupElement('banner')" class="px-3 py-1 bg-white border border-amber-300 rounded hover:bg-amber-100 font-medium">2. Banner</button>
+                                <button onclick="highlightGroupElement('frame')" class="px-3 py-1 bg-white border border-amber-300 rounded hover:bg-amber-100 font-medium">3. Frame</button>
+                                <button onclick="highlightGroupElement('menu')" class="px-3 py-1 bg-white border border-amber-300 rounded hover:bg-amber-100 font-medium">4. Menu</button>
+                                <button onclick="highlightGroupElement('textlink')" class="px-3 py-1 bg-white border border-amber-300 rounded hover:bg-amber-100 font-medium">5. Text Link</button>
+                                <button onclick="highlightGroupElement('imglink')" class="px-3 py-1 bg-white border border-amber-300 rounded hover:bg-amber-100 font-medium">6. Image Link</button>
+                            </div>
+                        </div>
+
+                        <!-- Split Code Configuration vs Live Website -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Code selections for the 6 elements -->
+                            <div class="space-y-3 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <h3 class="font-bold text-slate-800 border-b pb-2">Konfigurasi Kod HTML Kumpulan</h3>
+                                
+                                <div>
+                                    <label class="font-semibold text-slate-700 block mb-1">Elemen 1: Banner Laman Web</label>
+                                    <select id="grp-banner-val" onchange="runGroupPreview()" class="w-full p-2 border rounded font-mono text-xs bg-white">
+                                        <option value="">-- Tinggalkan Kosong (Ralat) --</option>
+                                        <option value="SEKOLAH MENENGAH KEBANGSAAN SELANDAR (1 AMANAH)">SEKOLAH MENENGAH KEBANGSAAN SELANDAR (1 AMANAH)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="font-semibold text-slate-700 block mb-1">Elemen 2: Paragraph Heading Main Title</label>
+                                    <select id="grp-heading-val" onchange="runGroupPreview()" class="w-full p-2 border rounded font-mono text-xs bg-white">
+                                        <option value="">-- Tinggalkan Kosong (Ralat) --</option>
+                                        <option value="h1">&lt;h1&gt;Selamat Datang Ke Portal Sekolah Kami&lt;/h1&gt;</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="font-semibold text-slate-700 block mb-1">Elemen 3: Struktur Menu Navigasi</label>
+                                    <select id="grp-menu-val" onchange="runGroupPreview()" class="w-full p-2 border rounded font-mono text-xs bg-white">
+                                        <option value="">-- Tinggalkan Kosong (Ralat) --</option>
+                                        <option value="valid">&lt;nav&gt;&lt;ul&gt;&lt;li&gt;Utama&lt;/li&gt;&lt;li&gt;Guru&lt;/li&gt;&lt;/ul&gt;&lt;/nav&gt;</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="font-semibold text-slate-700 block mb-1">Elemen 4: Tetapan Frame Layar</label>
+                                    <select id="grp-frame-val" onchange="runGroupPreview()" class="w-full p-2 border rounded font-mono text-xs bg-white">
+                                        <option value="">-- Tinggalkan Kosong (Ralat) --</option>
+                                        <option value="rows">&lt;frameset rows="20%,80%"&gt;</option>
+                                        <option value="cols">&lt;frameset cols="30%,70%"&gt;</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="font-semibold text-slate-700 block mb-1">Elemen 5: Pautan Teks</label>
+                                    <select id="grp-txtlink-val" onchange="runGroupPreview()" class="w-full p-2 border rounded font-mono text-xs bg-white">
+                                        <option value="">-- Tinggalkan Kosong (Ralat) --</option>
+                                        <option value="valid">&lt;a href="jadual.html"&gt;Klik Lihat Jadual Waktu&lt;/a&gt;</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="font-semibold text-slate-700 block mb-1">Elemen 6: Pautan Imej Lencana</label>
+                                    <select id="grp-imglink-val" onchange="runGroupPreview()" class="w-full p-2 border rounded font-mono text-xs bg-white">
+                                        <option value="">-- Tinggalkan Kosong (Ralat) --</option>
+                                        <option value="valid">&lt;a href="lencana.html"&gt;&lt;img src="badge.png"&gt;&lt;/a&gt;</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Live Rendered Web Page View -->
+                            <div class="space-y-2 flex flex-col">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Paparan Visual Laman Web Kumpulan</label>
+                                <div id="grp-preview-frame" class="flex-1 bg-white rounded-xl border-2 border-slate-300 p-4 min-h-[350px] shadow-inner space-y-4 overflow-y-auto">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. SCOREBOARD PAGE VIEW -->
+                <section id="page-scoreboard" class="page-view hidden max-w-6xl mx-auto space-y-6">
+                    <div class="border-b border-slate-200 pb-4">
+                        <h1 class="text-2xl font-bold text-slate-800">Papan Markah Formatif & Pemantauan Kendiri</h1>
+                        <p class="text-sm text-slate-600">Paparan pencapaian kumpulan dan misi individu bagi tujuan pemantauan kendiri dan refleksi guru.</p>
+                    </div>
+
+                    <!-- Groups Performance Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Group 1 Status Card -->
+                        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-extrabold text-slate-800 text-lg">KUMPULAN 1</span>
+                                <span id="sc-grp1-score" class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm">0 / 60 Markah</span>
+                            </div>
+                            <div class="space-y-1 text-xs">
+                                <div class="flex justify-between text-slate-600">
+                                    <span>Komponen Disempurnakan:</span>
+                                    <span id="sc-grp1-comp" class="font-bold">0 / 6</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div id="sc-grp1-bar" class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Group 2 Status Card -->
+                        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-extrabold text-slate-800 text-lg">KUMPULAN 2</span>
+                                <span id="sc-grp2-score" class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm">0 / 60 Markah</span>
+                            </div>
+                            <div class="space-y-1 text-xs">
+                                <div class="flex justify-between text-slate-600">
+                                    <span>Komponen Disempurnakan:</span>
+                                    <span id="sc-grp2-comp" class="font-bold">0 / 6</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div id="sc-grp2-bar" class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Group 3 Status Card -->
+                        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-extrabold text-slate-800 text-lg">KUMPULAN 3</span>
+                                <span id="sc-grp3-score" class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm">0 / 60 Markah</span>
+                            </div>
+                            <div class="space-y-1 text-xs">
+                                <div class="flex justify-between text-slate-600">
+                                    <span>Komponen Disempurnakan:</span>
+                                    <span id="sc-grp3-comp" class="font-bold">0 / 6</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div id="sc-grp3-bar" class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Group 4 Status Card -->
+                        <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-extrabold text-slate-800 text-lg">KUMPULAN 4</span>
+                                <span id="sc-grp4-score" class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-sm">0 / 60 Markah</span>
+                            </div>
+                            <div class="space-y-1 text-xs">
+                                <div class="flex justify-between text-slate-600">
+                                    <span>Komponen Disempurnakan:</span>
+                                    <span id="sc-grp4-comp" class="font-bold">0 / 6</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div id="sc-grp4-bar" class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Individual Overall Metrics Card -->
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3">
+                        <h3 class="font-bold text-slate-800 text-base">Ringkasan Kemajuan Misi Individu Kelas</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="text-xs text-slate-500 font-bold">Status Penyempurnaan</div>
+                                <div id="sc-ind-status" class="text-2xl font-extrabold text-indigo-600 mt-1">Dalam Proses</div>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="text-xs text-slate-500 font-bold">Markah Misi Individu</div>
+                                <div id="sc-ind-score" class="text-2xl font-extrabold text-emerald-600 mt-1">0 / 100</div>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="text-xs text-slate-500 font-bold">Jumlah Percubaan</div>
+                                <div id="sc-ind-attempts" class="text-2xl font-extrabold text-amber-600 mt-1">0 kali</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. TEACHER VIEW PAGE -->
+                <section id="page-teacher" class="page-view hidden max-w-6xl mx-auto space-y-6">
+                    <div class="border-b border-slate-200 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800">Paparan & Dashboard Guru</h1>
+                            <p class="text-sm text-slate-600">Analisis prestasi kelas, pemantauan ralat lazim, dan tindakan intervensi pnp.</p>
+                        </div>
+                        <span class="px-3 py-1 bg-rose-100 text-rose-700 text-xs font-bold rounded-full border border-rose-200 self-start md:self-auto">
+                            DATA DEMO KELAS (19 MURID)
+                        </span>
+                    </div>
+
+                    <!-- Teacher KPI Metrics Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs text-slate-500 font-bold">Penyempurnaan Individu</span>
+                            <div class="text-2xl font-extrabold text-slate-800">14 / 19 <span class="text-xs font-normal text-slate-500">(73.6%)</span></div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs text-slate-500 font-bold">Purata Markah Kumpulan</span>
+                            <div class="text-2xl font-extrabold text-purple-600">48.5 / 60</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs text-slate-500 font-bold">Topik Paling Dikuasai</span>
+                            <div class="text-sm font-bold text-emerald-600">4.2.3 Headings</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-1">
+                            <span class="text-xs text-slate-500 font-bold">Topik Perlu Bimbingan</span>
+                            <div class="text-sm font-bold text-rose-600">4.2.4 Tag Frameset</div>
+                        </div>
+                    </div>
+
+                    <!-- Common Student Errors Panel -->
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+                            <i class="fas fa-bug text-rose-500"></i>
+                            <span>Analisis Ralat Lazim Murid (Common Mistakes Panel)</span>
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl space-y-2">
+                                <div class="font-bold text-rose-900">1. Keliru Tag &lt;img&gt; & Tag &lt;image&gt;</div>
+                                <p class="text-rose-800 leading-relaxed">
+                                    Murid kerap menaip perkataan penuh <code>&lt;image&gt;</code> berbanding tag spesifik HTML <code>&lt;img&gt;</code> semasa membina pautan imej.
+                                </p>
+                            </div>
+                            <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+                                <div class="font-bold text-amber-900">2. Tertinggal Tag Pembungkus &lt;a&gt;</div>
+                                <p class="text-amber-800 leading-relaxed">
+                                    Murid meletakkan elemen imej tanpa membungkusnya di dalam tag <code>&lt;a href="..."&gt;</code> menyebabkan pautan imej tidak boleh diklik.
+                                </p>
+                            </div>
+                            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-2">
+                                <div class="font-bold text-blue-900">3. Struktur Tag Menu &lt;nav&gt;</div>
+                                <p class="text-blue-800 leading-relaxed">
+                                    Murid kerap terlupa bahawa item menu <code>&lt;li&gt;</code> mesti berada di dalam tag <code>&lt;ul&gt;</code> dan <code>&lt;nav&gt;</code>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        /* State Variables */
+        let state = {
+            currentPage: 'home',
+            navHistory: ['home'],
+            historyIndex: 0,
+            individualScore: 0,
+            individualAttempts: 0,
+            stage1Answered: false,
+            stage2Answered: false,
+            stage3Answered: false,
+            stage4Answered: false,
+            activeGroup: 1,
+            groupScores: { 1: 0, 2: 0, 3: 0, 4: 0 },
+            groupSubmitted: { 1: false, 2: false, 3: false, 4: false },
+            groupAnswers: {
+                1: { banner: '', heading: '', menu: '', frame: '', textlink: '', imglink: '' },
+                2: { banner: '', heading: '', menu: '', frame: '', textlink: '', imglink: '' },
+                3: { banner: '', heading: '', menu: '', frame: '', textlink: '', imglink: '' },
+                4: { banner: '', heading: '', menu: '', frame: '', textlink: '', imglink: '' }
+            },
+            groupChecklists: {
+                1: { heading: false, banner: false, frame: false, menu: false, textlink: false, imglink: false },
+                2: { heading: false, banner: false, frame: false, menu: false, textlink: false, imglink: false },
+                3: { heading: false, banner: false, frame: false, menu: false, textlink: false, imglink: false },
+                4: { heading: false, banner: false, frame: false, menu: false, textlink: false, imglink: false }
+            },
+            isPresentationMode: false
+        };
+
+        /* Navigation Logic */
+        function navigateTo(pageId, extraParam = null) {
+            state.currentPage = pageId;
+            state.navHistory.push(pageId);
+            state.historyIndex = state.navHistory.length - 1;
+
+            // Hide all pages
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
+            
+            // Show target page
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.remove('hidden');
+
+            // Update Nav Active State
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+            });
+            const activeBtn = document.getElementById('nav-' + pageId);
+            if (activeBtn) activeBtn.classList.add('bg-slate-800', 'text-white');
+
+            // Update Breadcrumb
+            const breadcrumbTitles = {
+                home: 'Laman Utama',
+                learn: 'Modul Pembelajaran',
+                explore: 'Stesen Meneroka',
+                individual: 'Misi Individu',
+                group: 'Cabaran Kumpulan',
+                scoreboard: 'Papan Markah',
+                teacher: 'Paparan Guru'
+            };
+            document.getElementById('breadcrumb-current').innerText = breadcrumbTitles[pageId] || 'Laman Utama';
+
+            if (pageId === 'learn' && extraParam) {
+                switchLearnTab(extraParam);
+            }
+
+            if (pageId === 'explore') {
+                loadExploreStation(1);
+            }
+
+            if (pageId === 'group') {
+                renderGroupChecklist();
+                runGroupPreview();
+            }
+
+            if (pageId === 'scoreboard') {
+                updateScoreboardView();
+            }
+
+            updateSidebarProgress();
+        }
+
+        function navigateHistory(direction) {
+            const newIndex = state.historyIndex + direction;
+            if (newIndex >= 0 && newIndex < state.navHistory.length) {
+                state.historyIndex = newIndex;
+                const pageId = state.navHistory[newIndex];
+                navigateTo(pageId);
+            }
+        }
+
+        function updateSidebarProgress() {
+            let totalCompleted = 0;
+            if (state.individualScore >= 100) totalCompleted += 50;
+            else totalCompleted += (state.individualScore / 100) * 50;
+
+            const grp1Mark = state.groupScores[1] || 0;
+            totalCompleted += (grp1Mark / 60) * 50;
+
+            const finalProg = Math.min(100, Math.round(totalCompleted));
+            document.getElementById('sidebar-overall-prog').innerText = finalProg + '%';
+            document.getElementById('sidebar-prog-bar').style.width = finalProg + '%';
+        }
+
+        /* Learn Page Logic */
+        function switchLearnTab(tabId) {
+            document.querySelectorAll('.learn-tab-content').forEach(c => c.classList.add('hidden'));
+            document.getElementById('learn-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('#page-learn button[id^="tab-sec-"]').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-brand-600', 'shadow-sm');
+                btn.classList.add('text-slate-600');
+            });
+            const activeTab = document.getElementById('tab-' + tabId);
+            if (activeTab) {
+                activeTab.classList.add('bg-white', 'text-brand-600', 'shadow-sm');
+                activeTab.classList.remove('text-slate-600');
+            }
+        }
+
+        function setHeadingDemo(level) {
+            const codeDisplay = document.getElementById('heading-code-display');
+            const visualDisplay = document.getElementById('heading-visual-display');
+
+            codeDisplay.innerText = `<${level}>Tajuk Utama Sekolah</${level}>`;
+
+            const fontSizes = {
+                h1: 'text-3xl font-bold',
+                h2: 'text-2xl font-bold',
+                h3: 'text-xl font-bold',
+                h4: 'text-lg font-bold',
+                h5: 'text-base font-bold',
+                h6: 'text-sm font-bold'
+            };
+
+            visualDisplay.innerHTML = `<${level} class="${fontSizes[level]}">Tajuk Utama Sekolah</${level}>`;
+        }
+
+        function toggleFrameDemo(type) {
+            const container = document.getElementById('frame-visual-container');
+            const btnRows = document.getElementById('btn-frame-rows');
+            const btnCols = document.getElementById('btn-frame-cols');
+
+            if (type === 'rows') {
+                btnRows.className = "flex-1 py-1.5 bg-blue-600 text-white rounded text-xs font-semibold";
+                btnCols.className = "flex-1 py-1.5 bg-slate-200 text-slate-700 rounded text-xs font-semibold";
+                container.className = "h-24 border-2 border-dashed border-blue-400 rounded flex flex-col p-1 gap-1 bg-white";
+                container.innerHTML = `
+                    <div class="bg-blue-100 text-blue-800 text-[10px] font-bold flex items-center justify-center flex-1 rounded">Bahagian Frame 1 (rows="30%")</div>
+                    <div class="bg-blue-200 text-blue-900 text-[10px] font-bold flex items-center justify-center flex-2 rounded">Bahagian Frame 2 (rows="70%")</div>
+                `;
+            } else {
+                btnCols.className = "flex-1 py-1.5 bg-blue-600 text-white rounded text-xs font-semibold";
+                btnRows.className = "flex-1 py-1.5 bg-slate-200 text-slate-700 rounded text-xs font-semibold";
+                container.className = "h-24 border-2 border-dashed border-blue-400 rounded flex flex-row p-1 gap-1 bg-white";
+                container.innerHTML = `
+                    <div class="bg-blue-100 text-blue-800 text-[10px] font-bold flex items-center justify-center flex-1 rounded text-center p-1">Frame 1 (cols="40%")</div>
+                    <div class="bg-blue-200 text-blue-900 text-[10px] font-bold flex items-center justify-center flex-1 rounded text-center p-1">Frame 2 (cols="60%")</div>
+                `;
+            }
+        }
+
+        function showMenuDetail(menuType) {
+            const titleEl = document.getElementById('menu-detail-title');
+            const descEl = document.getElementById('menu-detail-desc');
+
+            const menuInfo = {
+                static: {
+                    title: '1. Pautan Statik (Static Links)',
+                    desc: 'Menu pautan tetap yang kekal di satu kedudukan pada laman web. Dibina menggunakan kombinasi tag <nav>, <ul>, dan <li>.'
+                },
+                dropdown: {
+                    title: '2. Menu Drop-down',
+                    desc: 'Menu yang memaparkan sub-menu ke bawah apabila kursor dilalukan (hover) atau diklik oleh pengguna.'
+                },
+                multilevel: {
+                    title: '3. Menu Pelbagai Aras (Multilevel)',
+                    desc: 'Menu yang mempunyai beberapa cawangan sub-menu bersarang bagi mengelompokkan kategori kandungan yang besar.'
+                },
+                floating: {
+                    title: '4. Menu Terapung (Floating Menu)',
+                    desc: 'Menu navigasi yang sentiasa kekal kelihatan di skrin walaupun pengguna menatal (scroll) halaman ke bawah.'
+                }
+            };
+
+            titleEl.innerText = menuInfo[menuType].title;
+            descEl.innerText = menuInfo[menuType].desc;
+        }
+
+        function simulateLinkNav(url, pageTitle) {
+            document.getElementById('link-browser-url').innerText = 'http://sekolah.edu.my/' + url;
+            document.getElementById('link-browser-body').innerHTML = `
+                <h4 class="font-bold text-slate-800 text-base">${pageTitle}</h4>
+                <p class="text-xs text-slate-500">Anda telah berjaya menavigasi ke dokumen <code>${url}</code>!</p>
+                <button onclick="simulateLinkNav('index.html', 'Laman Utama Sekolah')" class="text-xs px-3 py-1 bg-brand-600 text-white rounded font-medium mt-2">
+                    Kembali Ke Laman Utama
+                </button>
+            `;
+        }
+
+        /* Explore Page Stations Logic */
+        const exploreStationsData = {
+            1: {
+                num: "STESEN 1",
+                name: "Paragraph Headings",
+                code: `<h1>Kejohanan Sukan Tahunan</h1>\n<h3>Acara Padang dan Balapan</h3>\n<h6>Tarikh: 12 Oktober 2026</h6>`,
+                outputHTML: `<h1 class="text-2xl font-bold text-slate-900">Kejohanan Sukan Tahunan</h1><h3 class="text-lg font-semibold text-slate-700">Acara Padang dan Balapan</h3><h6 class="text-xs font-medium text-slate-500">Tarikh: 12 Oktober 2026</h6>`
+            },
+            2: {
+                num: "STESEN 2",
+                name: "Banner Laman Web",
+                code: `<div class="banner">\n  <img src="banner_sekolah.jpg" alt="SMK Seri Bintang">\n</div>`,
+                outputHTML: `<div class="w-full p-4 bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-lg text-center font-bold text-lg tracking-wide uppercase shadow">SMK SERI BINTANG - ILMU SINAR HIDUP</div>`
+            },
+            3: {
+                num: "STESEN 3",
+                name: "Frame Pembahagi Screen",
+                code: `<frameset cols="30%,70%">\n  <frame src="menu.html">\n  <frame src="kandungan.html">\n</frameset>`,
+                outputHTML: `<div class="w-full flex h-32 border-2 border-dashed border-indigo-400 rounded-lg overflow-hidden"><div class="w-1/3 bg-indigo-100 p-2 text-xs font-bold text-indigo-900 border-r border-indigo-300 flex items-center justify-center">Menu Navigasi (30%)</div><div class="w-2/3 bg-white p-2 text-xs font-bold text-slate-700 flex items-center justify-center">Kandungan Laman Web (70%)</div></div>`
+            },
+            4: {
+                num: "STESEN 4",
+                name: "Menu Navigasi",
+                code: `<nav>\n  <ul>\n    <li>Utama</li>\n    <li>Profil</li>\n  </ul>\n</nav>`,
+                outputHTML: `<nav class="bg-slate-800 text-white p-3 rounded-lg"><ul class="flex space-x-4 text-xs font-semibold"><li class="hover:text-amber-400 cursor-pointer">• Utama</li><li class="hover:text-amber-400 cursor-pointer">• Profil</li></ul></nav>`
+            },
+            5: {
+                num: "STESEN 5",
+                name: "Pautan Teks (Text Link)",
+                code: `<a href="sejarah.html">Klik Untuk Baca Sejarah Sekolah</a>`,
+                outputHTML: `<a href="javascript:void(0)" class="text-blue-600 underline font-semibold text-sm hover:text-blue-800">Klik Untuk Baca Sejarah Sekolah</a>`
+            },
+            6: {
+                num: "STESEN 6",
+                name: "Pautan Imej (Image Link)",
+                code: `<a href="galeri.html">\n  <img src="galeri_icon.png" alt="Galeri">\n</a>`,
+                outputHTML: `<a href="javascript:void(0)" class="inline-flex flex-col items-center p-2 bg-amber-50 border border-amber-300 rounded hover:bg-amber-100 transition"><i class="fas fa-images text-2xl text-amber-600"></i><span class="text-[10px] font-bold text-amber-800 mt-1">Buka Galeri Foto</span></a>`
+            }
+        };
+
+        let currentStation = 1;
+
+        function loadExploreStation(stnNum) {
+            currentStation = stnNum;
+            const data = exploreStationsData[stnNum];
+
+            document.getElementById('stn-title-num').innerText = data.num;
+            document.getElementById('stn-title-name').innerText = data.name;
+            document.getElementById('stn-code-block').innerText = data.code;
+
+            // Highlight button
+            document.querySelectorAll('.stn-tab').forEach(btn => btn.classList.remove('border-brand-500', 'bg-brand-50'));
+            const activeBtn = document.getElementById('stn-btn-' + stnNum);
+            if (activeBtn) activeBtn.classList.add('border-brand-500', 'bg-brand-50');
+
+            resetExploreStation();
+        }
+
+        function revealExploreOutput() {
+            const data = exploreStationsData[currentStation];
+            const outputBox = document.getElementById('stn-output-box');
+            outputBox.className = "bg-white rounded-xl border border-slate-300 min-h-[220px] p-6 flex flex-col items-center justify-center text-center shadow-inner";
+            outputBox.innerHTML = data.outputHTML;
+        }
+
+        function resetExploreStation() {
+            const outputBox = document.getElementById('stn-output-box');
+            outputBox.className = "bg-slate-100 rounded-xl border-2 border-dashed border-slate-300 min-h-[220px] p-6 flex flex-col items-center justify-center text-center";
+            outputBox.innerHTML = `
+                <i class="fas fa-eye-slash text-slate-400 text-3xl mb-2"></i>
+                <p class="text-xs text-slate-500 font-medium">Output disembunyikan. Klik "Tunjuk Output" untuk melihat jawapan visual.</p>
+            `;
+        }
+
+        /* Individual Mission Stages Logic */
+        const stage1Data = [
+            { id: 1, desc: "Digunakan untuk membina tajuk perenggan pelbagai saiz daripada h1 hingga h6.", answer: "Paragraph Heading" },
+            { id: 2, desc: "Grafik tajuk utama yang diletakkan di bahagian atas laman web.", answer: "Banner" },
+            { id: 3, desc: "Membahagikan tetingkap pelayar kepada beberapa bahagian berasingan.", answer: "Frame" },
+            { id: 4, desc: "Mengandungi senarai pautan menggunakan tag nav, ul, dan li.", answer: "Menu" }
+        ];
+
+        function initStage1() {
+            const container = document.getElementById('stage1-questions-container');
+            container.innerHTML = stage1Data.map(item => `
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+                    <div class="font-medium text-slate-700 md:w-2/3">${item.id}. ${item.desc}</div>
+                    <select id="stg1-ans-${item.id}" class="p-2 border border-slate-300 rounded bg-white font-semibold text-slate-800">
+                        <option value="">-- Pilih Konsep HTML --</option>
+                        <option value="Paragraph Heading">Paragraph Heading</option>
+                        <option value="Banner">Banner</option>
+                        <option value="Frame">Frame</option>
+                        <option value="Menu">Menu</option>
+                        <option value="Text Link">Text Link</option>
+                        <option value="Image Link">Image Link</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        function switchIndStage(stageNum) {
+            document.querySelectorAll('.ind-stage-content').forEach(s => s.classList.add('hidden'));
+            document.getElementById('ind-stage-' + stageNum).classList.remove('hidden');
+
+            document.querySelectorAll('.ind-stage-btn').forEach(btn => {
+                btn.className = "ind-stage-btn flex-1 py-2.5 px-3 rounded-lg text-center transition text-slate-600 hover:bg-slate-100";
+            });
+            const activeBtn = document.getElementById('ind-tab-' + stageNum);
+            if (activeBtn) activeBtn.className = "ind-stage-btn flex-1 py-2.5 px-3 rounded-lg text-center transition bg-indigo-600 text-white font-bold";
+        }
+
+        function checkStage1() {
+            let correct = 0;
+            stage1Data.forEach(item => {
+                const val = document.getElementById('stg1-ans-' + item.id).value;
+                if (val === item.answer) correct++;
+            });
+
+            const feedback = document.getElementById('stage1-feedback');
+            feedback.classList.remove('hidden');
+
+            if (correct === stage1Data.length) {
+                feedback.className = "text-xs font-semibold text-emerald-600";
+                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Syabas! Semua padanan konsep tepat. (+25 Markah)`;
+                if (!state.stage1Answered) {
+                    state.individualScore += 25;
+                    state.stage1Answered = true;
+                }
+            } else {
+                feedback.className = "text-xs font-semibold text-rose-600";
+                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Anda mendapat ${correct}/${stage1Data.length} betul. Petunjuk: Baca semula penerangan fungsi Banner & Frame!`;
+            }
+            updateIndividualScoreDisplay();
+        }
+
+        function checkStage2() {
+            const selected = document.querySelector('input[name="stg2-option"]:checked');
+            const feedback = document.getElementById('stage2-feedback');
+            feedback.classList.remove('hidden');
+
+            if (selected && selected.value === 'A') {
+                feedback.className = "text-xs font-semibold text-emerald-600";
+                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Tepat sekali! Tag nav, ul, dan li menghasilkan senarai pautan menu. (+25 Markah)`;
+                if (!state.stage2Answered) {
+                    state.individualScore += 25;
+                    state.stage2Answered = true;
+                }
+            } else {
+                feedback.className = "text-xs font-semibold text-rose-600";
+                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Jawapan kurang tepat. Tag &lt;ul&gt; & &lt;li&gt; menghasilkan senarai berbintik (bulleted list).`;
+            }
+            updateIndividualScoreDisplay();
+        }
+
+        function checkStage3() {
+            const selected = document.querySelector('input[name="stg3-option"]:checked');
+            const feedback = document.getElementById('stage3-feedback');
+            feedback.classList.remove('hidden');
+
+            if (selected && selected.value === 'B') {
+                feedback.className = "text-xs font-semibold text-emerald-600";
+                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Tepat! Sintaks HTML yang betul untuk imej ialah &lt;img&gt;. (+25 Markah)`;
+                if (!state.stage3Answered) {
+                    state.individualScore += 25;
+                    state.stage3Answered = true;
+                }
+            } else {
+                feedback.className = "text-xs font-semibold text-rose-600";
+                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Ralat utama bukan pada pautan, tetapi pada kata kunci tag imej itu sendiri.`;
+            }
+            updateIndividualScoreDisplay();
+        }
+
+        function updateStage4Preview() {
+            const hVal = document.getElementById('stg4-heading').value;
+            const lVal = document.getElementById('stg4-link').value;
+            const iVal = document.getElementById('stg4-img').value;
+
+            const box = document.getElementById('stg4-preview-box');
+            let htmlContent = '';
+
+            if (hVal === 'h1') htmlContent += `<h1 class="text-lg font-bold text-indigo-900 mb-2">Portal Pembelajaran ASK</h1>`;
+            else if (hVal) htmlContent += `<p class="text-xs text-slate-700 mb-2">Portal Pembelajaran ASK</p>`;
+
+            if (lVal === 'a') htmlContent += `<a href="#" class="text-blue-600 underline font-semibold text-xs block mb-2">Muat Turun Nota</a>`;
+
+            if (iVal === 'img') htmlContent += `<div class="p-2 bg-indigo-50 border border-indigo-200 rounded inline-block text-[10px] font-bold text-indigo-800"><i class="fas fa-shield-halved text-base mb-1 block"></i> [Imej Logo Sah]</div>`;
+
+            box.innerHTML = htmlContent || `<span class="text-slate-400">Pilih sekurang-kurangnya satu elemen.</span>`;
+        }
+
+        function checkStage4() {
+            const hVal = document.getElementById('stg4-heading').value;
+            const lVal = document.getElementById('stg4-link').value;
+            const iVal = document.getElementById('stg4-img').value;
+
+            const feedback = document.getElementById('stage4-feedback');
+            feedback.classList.remove('hidden');
+
+            if (hVal === 'h1' && lVal === 'a' && iVal === 'img') {
+                feedback.className = "text-xs font-semibold text-emerald-600";
+                feedback.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Tahniah! Struktur laman web dibina dengan tag yang sah. (+25 Markah)`;
+                if (!state.stage4Answered) {
+                    state.individualScore += 25;
+                    state.stage4Answered = true;
+                }
+                document.getElementById('ind-summary-box').classList.remove('hidden');
+            } else {
+                feedback.className = "text-xs font-semibold text-rose-600";
+                feedback.innerHTML = `<i class="fas fa-times-circle mr-1"></i> Sila pastikan anda memilih tag &lt;h1&gt;, &lt;a&gt;, dan &lt;img&gt; yang betul.`;
+            }
+            updateIndividualScoreDisplay();
+        }
+
+        function updateIndividualScoreDisplay() {
+            state.individualAttempts++;
+            document.getElementById('ind-score-display').innerText = state.individualScore + ' / 100';
+            updateSidebarProgress();
+        }
+
+        /* Group member data */
+        const groupMembers = {
+            1: ['Asyraf', 'Isma', 'Hakim', 'Izham', 'Irfan'],
+            2: ['Rethis', 'Sharvin', 'Zaim', 'Hanan', 'Erien'],
+            3: ['Aisah', 'Damia', 'Sufina', 'Hana', 'Mia', 'Alia'],
+            4: ['Ummi', 'Sulaiha', 'Kemin', 'Yu cheng', 'Tze ling']
+        };
+
+        const groupRoleNames = [
+            'HTML Designer',
+            'Nav Specialist',
+            'Output Tester',
+            'Content Checker',
+            'Presenter',
+            'Ahli Tambahan'
+        ];
+
+        function renderGroupMembers() {
+            const container = document.getElementById('grp-member-list');
+            if (!container) return;
+
+            const members = groupMembers[state.activeGroup] || [];
+            container.innerHTML = members.map((name, index) => `
+                <div class="flex items-center justify-between p-2 bg-slate-50 rounded border">
+                    <span class="font-semibold text-slate-700">${index + 1}. ${groupRoleNames[index] || 'Ahli Kumpulan'}:</span>
+                    <input type="text" value="${name}" readonly class="w-28 p-1 border rounded text-right text-xs bg-white">
+                </div>
+            `).join('');
+        }
+
+        /* Group Challenge Logic */
+        function getCurrentGroupAnswers() {
+            return {
+                banner: document.getElementById('grp-banner-val')?.value || '',
+                heading: document.getElementById('grp-heading-val')?.value || '',
+                menu: document.getElementById('grp-menu-val')?.value || '',
+                frame: document.getElementById('grp-frame-val')?.value || '',
+                textlink: document.getElementById('grp-txtlink-val')?.value || '',
+                imglink: document.getElementById('grp-imglink-val')?.value || ''
+            };
+        }
+
+        function getCurrentGroupCorrectness() {
+            const a = getCurrentGroupAnswers();
+            return {
+                banner: a.banner.trim() !== '',
+                heading: a.heading === 'h1',
+                menu: a.menu === 'valid',
+                frame: a.frame === 'rows' || a.frame === 'cols',
+                textlink: a.textlink === 'valid',
+                imglink: a.imglink === 'valid'
+            };
+        }
+
+        function saveCurrentGroupAnswers() {
+            if (!document.getElementById('grp-banner-val')) return;
+            state.groupAnswers[state.activeGroup] = getCurrentGroupAnswers();
+        }
+
+        function loadGroupAnswers(grpNum) {
+            const a = state.groupAnswers[grpNum] || {};
+            document.getElementById('grp-banner-val').value = a.banner || '';
+            document.getElementById('grp-heading-val').value = a.heading || '';
+            document.getElementById('grp-menu-val').value = a.menu || '';
+            document.getElementById('grp-frame-val').value = a.frame || '';
+            document.getElementById('grp-txtlink-val').value = a.textlink || '';
+            document.getElementById('grp-imglink-val').value = a.imglink || '';
+        }
+
+        function selectActiveGroup(grpNum) {
+            saveCurrentGroupAnswers();
+            state.activeGroup = grpNum;
+
+            document.querySelectorAll('.grp-btn').forEach(btn => {
+                btn.className = "grp-btn px-4 py-1.5 rounded-lg text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+            });
+            const activeBtn = document.getElementById('grp-sel-' + grpNum);
+            if (activeBtn) activeBtn.className = "grp-btn px-4 py-1.5 rounded-lg text-xs font-bold transition bg-purple-600 text-white";
+
+            loadGroupAnswers(grpNum);
+            renderGroupMembers();
+            renderGroupChecklist();
+            runGroupPreview();
+        }
+
+        function renderGroupChecklist() {
+            const container = document.getElementById('grp-checklist-container');
+            if (!container) return;
+
+            const correctness = getCurrentGroupCorrectness();
+
+            const items = [
+                { key: 'heading', name: '1. Paragraph Heading' },
+                { key: 'banner', name: '2. Banner Sekolah' },
+                { key: 'frame', name: '3. Frame Navigasi' },
+                { key: 'menu', name: '4. Menu (nav, ul, li)' },
+                { key: 'textlink', name: '5. Pautan Teks' },
+                { key: 'imglink', name: '6. Pautan Imej' }
+            ];
+
+            let completedCount = 0;
+
+            container.innerHTML = items.map(item => {
+                const isDone = correctness[item.key];
+                if (isDone) completedCount++;
+
+                return `
+                    <div class="p-2.5 rounded-lg border flex items-center justify-between ${isDone ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900'}">
+                        <span class="font-semibold text-[11px]">${item.name}</span>
+                        <i class="fas ${isDone ? 'fa-check-circle text-emerald-600' : 'fa-times-circle text-rose-500'}"></i>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('grp-check-count').innerText = `${completedCount} / 6 Disempurnakan`;
+
+            // Markah hanya berubah selepas Hantar Laman Web.
+            document.getElementById('grp-score-display').innerText =
+                `${state.groupScores[state.activeGroup] || 0} / 60`;
+        }
+
+        function runGroupPreview() {
+            const a = getCurrentGroupAnswers();
+            const previewFrame = document.getElementById('grp-preview-frame');
+            if (!previewFrame) return;
+
+            saveCurrentGroupAnswers();
+
+            let html = '';
+
+            // Output hanya muncul apabila komponen dipilih.
+            if (a.banner.trim() !== '') {
+                html += `<div id="elem-banner" class="w-full p-3 bg-purple-800 text-white font-extrabold text-center uppercase tracking-wider rounded text-sm">${a.banner}</div>`;
+            }
+
+            if (a.heading === 'h1') {
+                html += `<div id="elem-heading" class="p-1"><h1 class="text-xl font-bold text-slate-800 border-b pb-1">Selamat Datang Ke Portal Sekolah Kami</h1></div>`;
+            }
+
+            if (a.menu === 'valid') {
+                html += `<div id="elem-menu" class="p-2 bg-slate-800 text-white rounded"><nav><ul class="flex space-x-3 text-xs font-medium"><li class="text-amber-300">Utama</li><li>• Profil</li><li>• Akademik</li><li>• Kokurikulum</li></ul></nav></div>`;
+            }
+
+            if (a.frame !== '') {
+                html += `<div id="elem-frame" class="p-3 border-2 border-dashed border-purple-300 rounded flex ${a.frame === 'cols' ? 'flex-row gap-2' : 'flex-col gap-2'} bg-purple-50 text-xs">`;
+                html += `<div class="p-2 bg-white rounded border border-purple-200 flex-1 font-bold text-purple-900">Kawasan Frame Navigasi Left</div>`;
+                html += `<div class="p-3 bg-white rounded border border-purple-200 flex-2 space-y-2">`;
+
+                if (a.textlink === 'valid') {
+                    html += `<div id="elem-textlink"><a href="#" class="text-brand-600 underline font-semibold text-xs">[Pautan Teks: Klik Lihat Jadual Waktu]</a></div>`;
+                }
+
+                if (a.imglink === 'valid') {
+                    html += `<div id="elem-imglink"><a href="#" class="inline-flex items-center space-x-2 p-1 bg-amber-100 border border-amber-300 rounded text-amber-900 font-bold text-[10px]"><i class="fas fa-award text-amber-600 text-base"></i><span>[Pautan Imej Lencana]</span></a></div>`;
+                }
+
+                html += `</div></div>`;
+            } else {
+                if (a.textlink === 'valid') {
+                    html += `<div id="elem-textlink"><a href="#" class="text-brand-600 underline font-semibold text-xs">[Pautan Teks: Klik Lihat Jadual Waktu]</a></div>`;
+                }
+                if (a.imglink === 'valid') {
+                    html += `<div id="elem-imglink"><a href="#" class="inline-flex items-center space-x-2 p-1 bg-amber-100 border border-amber-300 rounded text-amber-900 font-bold text-[10px]"><i class="fas fa-award text-amber-600 text-base"></i><span>[Pautan Imej Lencana]</span></a></div>`;
+                }
+            }
+
+            if (!html) {
+                html = `<div class="h-full min-h-[300px] flex flex-col items-center justify-center text-center text-slate-400">
+                            <i class="fas fa-code text-3xl mb-3"></i>
+                            <p class="text-xs font-semibold">Output masih kosong.</p>
+                            <p class="text-[11px] mt-1">Pilih elemen yang diperlukan untuk melihat output.</p>
+                        </div>`;
+            }
+
+            previewFrame.innerHTML = html;
+            renderGroupChecklist();
+        }
+
+        function submitGroupProject() {
+            const correctness = getCurrentGroupCorrectness();
+            saveCurrentGroupAnswers();
+
+            const keys = ['heading', 'banner', 'frame', 'menu', 'textlink', 'imglink'];
+            const correctCount = keys.filter(key => correctness[key]).length;
+            const score = correctCount * 10;
+
+            state.groupScores[state.activeGroup] = score;
+            state.groupChecklists[state.activeGroup] = { ...correctness };
+            state.groupSubmitted[state.activeGroup] = true;
+
+            renderGroupChecklist();
+            updateScoreboardView();
+            updateSidebarProgress();
+
+            if (score === 60) {
+                alertModal(`Tahniah! Kumpulan ${state.activeGroup} berjaya melengkapkan semua 6 komponen. Markah: 60 / 60.`);
+            } else {
+                alertModal(`Kumpulan ${state.activeGroup} telah menghantar laman web. ${correctCount} daripada 6 komponen betul. Markah: ${score} / 60. Komponen yang ditinggalkan kosong tidak mendapat markah.`);
+            }
+        }
+
+        function togglePresentationMode() {
+            state.isPresentationMode = !state.isPresentationMode;
+            const bar = document.getElementById('pres-mode-bar');
+            if (state.isPresentationMode) {
+                bar.classList.remove('hidden');
+            } else {
+                bar.classList.add('hidden');
+                document.querySelectorAll('.preview-highlight').forEach(e => e.classList.remove('preview-highlight'));
+            }
+        }
+
+        function highlightGroupElement(elemKey) {
+            document.querySelectorAll('.preview-highlight').forEach(e => e.classList.remove('preview-highlight'));
+            const target = document.getElementById('elem-' + elemKey);
+            if (target) {
+                target.classList.add('preview-highlight');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        /* Scoreboard Logic */
+        function updateScoreboardView() {
+            for (let i = 1; i <= 4; i++) {
+                const score = state.groupScores[i] || 0;
+                const checklist = state.groupChecklists[i];
+                let count = 0;
+                Object.values(checklist).forEach(v => { if (v) count++; });
+
+                document.getElementById(`sc-grp${i}-score`).innerText = `${score} / 60 Markah`;
+                document.getElementById(`sc-grp${i}-comp`).innerText = `${count} / 6`;
+                document.getElementById(`sc-grp${i}-bar`).style.width = `${(count / 6) * 100}%`;
+            }
+
+            document.getElementById('sc-ind-score').innerText = `${state.individualScore} / 100`;
+            document.getElementById('sc-ind-attempts').innerText = `${state.individualAttempts} kali`;
+            document.getElementById('sc-ind-status').innerText = state.individualScore >= 100 ? 'Selesai' : 'Dalam Proses';
+        }
+
+        /* Custom Alert Modal Replacer */
+        function alertModal(msg) {
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-center">
+                    <div class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mx-auto text-xl">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <p class="text-sm text-slate-700 font-medium">${msg}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-lg transition">
+                        Faham
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        /* App Initialization */
+        window.onload = function() {
+            initStage1();
+            navigateTo('home');
+        renderGroupMembers();
+        };
+    </script>
+</body>
+</html>
